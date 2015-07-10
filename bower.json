@@ -1,0 +1,24 @@
+{
+  "name": "OZWSS-Polymer-device-item",
+  "version": "0.0.1",
+  "homepage": "https://github.com/wburgers/OZWSS-Polymer-device-item",
+  "description": "device-item element for the OZWSS Polymer client",
+  "main": "OZWSS-Polymer-device-item.html",
+  "authors": [
+    "Willem Burgers"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~1.0.0",
+	"paper-slider": "PolymerElements/paper-slider#^1.0.0",
+	"paper-toggle-button" : "PolymerElements/paper-toggle-button#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
+  }
+}

@@ -1,0 +1,120 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../paper-slider/paper-slider.html">
+<link rel="import" href="../paper-toggle-button/paper-toggle-button.html">
+
+<!--
+@element OZWSS-Polymer-device-item
+@demo demo/index.html
+-->
+
+<dom-module id="OZWSS-Polymer-device-item">
+	<style>
+		paper-material {
+			border-radius: 2px;
+			margin: 16px auto;
+			background: white;
+			padding: 20px;
+			width: 245px;
+			margin: 20px;
+		}
+		.names {
+			@apply(--layout-vertical);
+			font-size: 90%;
+			margin: 15px;
+		}
+		.values {
+			@apply(--layout-vertical);
+			font-size: 90%;
+			margin: 15px;
+		}
+	</style>
+	<template>
+		<paper-material>
+			<div class="device-item-header">
+				<h4>{{device.Name}}</h4>
+			</div>
+			<template is="dom-if" if="{{_computeMultilevel(device)}}">
+				<paper-slider
+					min="0"
+					max="99"
+					value="{{device.Values.Level}}"
+					editable
+					on-change="_sliderChanged">
+				</paper-slider>
+			</template>
+			<template is"dom-if" if="{{_computeBinary}}">
+				<paper-toggle-button
+					id="toggle"
+					on-change="_toggleChanged">
+				</paper-toggle-button>
+			</template>
+			<div class="names">
+				<template is="dom-if" if="{{_computeBatteryDevice(device)}}">
+					<span block>Battery Level</span>
+					<span block>Last Seen</span>
+				</template>
+				<template is="dom-if" if="{{_computeWakeInterval(device)}}">
+					<span block>Wake-up Interval</span>
+				</template>
+			</div>
+			<div class="values">
+				<template is="dom-if" if="{{_computeBatteryDevice(device)}}">
+					<span block>{{device.Values["Battery Level"]}}</span>
+					<span block>{{device.LastSeen}}</span>
+				</template>
+				<template is="dom-if" if="{{_computeWakeInterval(device)}}">
+					<span block>{{device.Values['Wake-up Interval']}}</span>
+				</template>
+			</div>
+		</paper-material>
+	</template>
+</dom-module>
+
+<script>
+	Polymer({
+		is: "OZWSS-Polymer-device-item",
+		properties: {
+			device: {
+				type: Object,
+				value: function() { return {}; },
+			},
+		},
+		observers: [
+			'_toggleChange(device.Values.Switch)'
+		],
+		
+		_computeMultilevel: function(device) {
+			return device.Type === 'Multilevel Power Switch';
+		},
+		_computeBinary: function(device) {
+			return device.Type === 'Binary Power Switch';
+		},
+		_computeBatteryDevice: function(device) {
+			return device.Values['Battery Level'];
+		},
+		_computeWakeInterval: function(device) {
+			return device.Values['Wake-up Interval'];
+		},
+		
+		_sliderChanged: function(event, detail, sender) {
+			var commandstring = "SETNODE~"+this.device.ID+"~Level="+sender.value;
+			this.fire('send-command',{command:commandstring});
+		},
+		_toggleChanged: function(event, detail, sender) {
+			var checked = sender.checked === true ? 1 : 0;
+			var commandstring = "SETNODE~"+this.device.ID+"~Switch="+checked;
+			this.fire('send-command',{command:commandstring});
+		},
+		_toggleChange: function(newValue, oldValue) {
+			if(newValue == "True") {
+				this.$.toggle.checked = true;
+			}
+			else {
+				this.$.toggle.checked = false;
+			}
+		},
+	});
+</script>

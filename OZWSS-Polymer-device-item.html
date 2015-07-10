@@ -121,7 +121,7 @@
 			this.fire('send-command',{command:commandstring});
 		},
 		_toggleChange: function(newValue, oldValue) {
-			var toggleButton = Polymer.dom(toggleButtonTemplate).querySelector('#toggle');
+			var toggleButton = Polymer.dom(this).querySelector('#toggle');
 			if(toggleButton && newValue == "True") {
 				
 				toggleButton.checked = true;

@@ -47,7 +47,7 @@
 					on-change="_sliderChanged">
 				</paper-slider>
 			</template>
-			<template is"dom-if" if="{{_computeBinary}}" id="toggleButtonTemplate">
+			<template is"dom-if" if="{{_computeBinary(device)}}" id="toggleButtonTemplate">
 				<paper-toggle-button
 					id="toggle"
 					on-change="_toggleChanged">

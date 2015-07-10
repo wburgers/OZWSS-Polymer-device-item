@@ -50,6 +50,7 @@
 			<template is="dom-if" if="{{_computeBinary(device)}}">
 				<paper-toggle-button
 					id="toggle"
+					checked={{device.Values.Switch}}
 					on-change="_toggleChanged">
 				</paper-toggle-button>
 			</template>
@@ -86,10 +87,7 @@
 				value: function() { return {}; },
 			},
 		},
-		observers: [
-			'_toggleChange(device.Values.Switch)'
-		],
-		
+				
 		_computeMultilevel: function(device) {
 			return device.Type === 'Multilevel Power Switch';
 		},
@@ -118,16 +116,6 @@
 			var checked = event.srcElement.checked === true ? 1 : 0;
 			var commandstring = "SETNODE~"+this.device.ID+"~Switch="+checked;
 			this.fire('send-command',{command:commandstring});
-		},
-		_toggleChange: function(newValue, oldValue) {
-			var toggleButton = Polymer.dom(this).querySelector('#toggle');
-			if(toggleButton && newValue == "True") {
-				
-				toggleButton.checked = true;
-			}
-			else if(toggleButton) {
-				toggleButton.checked = false;
-			}
 		},
 	});
 </script>

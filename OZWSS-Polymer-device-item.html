@@ -47,7 +47,7 @@
 					on-change="_sliderChanged">
 				</paper-slider>
 			</template>
-			<template is"dom-if" if="{{_computeBinary(device)}}" id="toggleButtonTemplate">
+			<template is="dom-if" if="{{_computeBinary(device)}}">
 				<paper-toggle-button
 					id="toggle"
 					on-change="_toggleChanged">
@@ -110,12 +110,12 @@
 			return device.Values["Wake-up Interval"];
 		},
 		
-		_sliderChanged: function(event, detail, sender) {
-			var commandstring = "SETNODE~"+this.device.ID+"~Level="+sender.value;
+		_sliderChanged: function(event, detail) {
+			var commandstring = "SETNODE~"+this.device.ID+"~Level="+event.srcElement.value;
 			this.fire('send-command',{command:commandstring});
 		},
-		_toggleChanged: function(event, detail, sender) {
-			var checked = sender.checked === true ? 1 : 0;
+		_toggleChanged: function(event, detail) {
+			var checked = event.srcElement.checked === true ? 1 : 0;
 			var commandstring = "SETNODE~"+this.device.ID+"~Switch="+checked;
 			this.fire('send-command',{command:commandstring});
 		},

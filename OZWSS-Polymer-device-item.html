@@ -17,8 +17,11 @@
 			margin: 16px auto;
 			background: white;
 			padding: 20px;
-			width: 245px;
+			width: 268px;
 			margin: 20px;
+		}
+		.additional {
+			@apply(--layout-horizontal);
 		}
 		.names {
 			@apply(--layout-vertical);
@@ -51,23 +54,25 @@
 					on-change="_toggleChanged">
 				</paper-toggle-button>
 			</template>
-			<div class="names">
-				<template is="dom-if" if="{{_computeBatteryDevice(device)}}">
-					<span block>Battery Level</span>
-					<span block>Last Seen</span>
-				</template>
-				<template is="dom-if" if="{{_computeWakeInterval(device)}}">
-					<span block>Wake-up Interval</span>
-				</template>
-			</div>
-			<div class="values">
-				<template is="dom-if" if="{{_computeBatteryDevice(device)}}">
-					<span block>{{device.Values["Battery Level"]}}</span>
-					<span block>{{device.LastSeen}}</span>
-				</template>
-				<template is="dom-if" if="{{_computeWakeInterval(device)}}">
-					<span block>{{device.Values['Wake-up Interval']}}</span>
-				</template>
+			<div class="additional">
+				<div class="names">
+					<template is="dom-if" if="{{_computeBatteryDevice(device)}}">
+						<span>Battery Level</span>
+						<span>Last Seen</span>
+					</template>
+					<template is="dom-if" if="{{_computeWakeIntervalDevice(device)}}">
+						<span>Wake-up Interval</span>
+					</template>
+				</div>
+				<div class="values">
+					<template is="dom-if" if="{{_computeBatteryDevice(device)}}">
+						<span>{{_computeBatteryLevel(device)}}</span>
+						<span>{{device.LastSeen}}</span>
+					</template>
+					<template is="dom-if" if="{{_computeWakeIntervalDevice(device)}}">
+						<span>{{_computeWakeInterval(device)}}</span>
+					</template>
+				</div>
 			</div>
 		</paper-material>
 	</template>
@@ -93,10 +98,17 @@
 			return device.Type === 'Binary Power Switch';
 		},
 		_computeBatteryDevice: function(device) {
-			return device.Values['Battery Level'];
+			return device.Values && device.Values['Battery Level'];
+		},
+		_computeWakeIntervalDevice: function(device) {
+			return device.Values && device.Values['Wake-up Interval'];
+		},
+		
+		_computeBatteryLevel: function(device) {
+			return device.Values["Battery Level"];
 		},
 		_computeWakeInterval: function(device) {
-			return device.Values['Wake-up Interval'];
+			return device.Values["Wake-up Interval"];
 		},
 		
 		_sliderChanged: function(event, detail, sender) {
@@ -110,12 +122,11 @@
 		},
 		_toggleChange: function(newValue, oldValue) {
 			var toggleButton = Polymer.dom(toggleButtonTemplate).querySelector('#toggle');
-			console.log(toggleButton);
-			if(newValue == "True") {
+			if(toggleButton && newValue == "True") {
 				
 				toggleButton.checked = true;
 			}
-			else {
+			else if(toggleButton) {
 				toggleButton.checked = false;
 			}
 		},

@@ -8,10 +8,11 @@
 		<link rel="import" href="../OZWSS-Polymer-device-item.html">
 	</head>
 	<body style="font-family: 'Roboto2', sans-serif; font-size: 1em;">
-		<OZWSS-Polymer-device-item id="device-item-multilevel"></OZWSS-Polymer-device-item>
+		<OZWSS-Polymer-device-item id="device-item"></OZWSS-Polymer-device-item>
 		<script>
-			var device_item_multilevel = document.getElementById('device-item-multilevel');
-			device_item_multilevel.device = JSON.parse('{"command":"ALIST","nodes":[{"ID":2,"LastSeen":"Wed 08 Jul 09:32","Location":"Kamer","Name":"Staande Lamp 1","Type":"Multilevel Power Switch","Values":{"Application Version":"1.12","Bright":"False","Dim":"False","Ignore Start Level":"True","Level":"0","Library Version":"6","Protection":"Unprotected","Protocol Version":"3.40","Start Level":"0","Switch All":"On and Off Enabled"}}]}').nodes.slice()[0];
+			var device_item = document.getElementById('device-item');
+			device_item.device = JSON.parse('{"command":"ALIST","nodes":[{"ID":6,"LastSeen":"Fri 10 Jul 13:52","Location":"Kamer","Name":"Buddha Waterpomp","Type":"Binary Power Switch","Values":{"Application Version":"1.04","Library Version":"6","Protocol Version":"2.64","Switch":"True","Switch All":"On and Off Enabled"}}]}').nodes.slice()[0];
+			device_item.device = JSON.parse('{"command":"ALIST","nodes":[{"ID":6,"LastSeen":"Fri 10 Jul 13:52","Location":"Kamer","Name":"Buddha Waterpomp","Type":"Binary Power Switch","Values":{"Application Version":"1.04","Library Version":"6","Protocol Version":"2.64","Switch":"False","Switch All":"On and Off Enabled"}}]}').nodes.slice()[0];
 		</script>
 	</body>
 </html>

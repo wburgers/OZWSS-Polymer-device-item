@@ -50,7 +50,7 @@
 			<template is="dom-if" if="{{_computeBinary(device)}}" id="toggleTemplate">
 				<paper-toggle-button
 					id="toggle"
-					checked={{_switchState}}
+					checked={{_computeSwitchState(device)}}
 					on-change="_toggleChanged">
 				</paper-toggle-button>
 			</template>
@@ -86,13 +86,7 @@
 				type: Object,
 				value: function() { return {}; },
 			},
-			_switchState: {
-				type: Boolean,
-			}
 		},
-		observers: [
-			'_toggleChange(device)'
-		],
 		
 		_computeMultilevel: function(device) {
 			return device.Type === 'Multilevel Power Switch';
@@ -113,6 +107,9 @@
 		_computeWakeInterval: function(device) {
 			return device.Values["Wake-up Interval"];
 		},
+		_computeSwitchState: function(device) {
+			return device.Values && device.Values.Switch == "True"
+		},
 		
 		_sliderChanged: function(event, detail) {
 			var commandstring = "SETNODE~"+this.device.ID+"~Level="+event.srcElement.value;
@@ -122,14 +119,6 @@
 			var checked = event.srcElement.checked === true ? 1 : 0;
 			var commandstring = "SETNODE~"+this.device.ID+"~Switch="+checked;
 			this.fire('send-command',{command:commandstring});
-		},
-		_toggleChange: function(changeRecords) {
-			if(this.device.Values && this.device.Values.Switch == "True") {
-				_switchState = true;
-			}
-			else {
-				_switchState = false;
-			}
 		},
 	});
 </script>

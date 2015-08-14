@@ -11,29 +11,30 @@
 -->
 
 <dom-module id="OZWSS-Polymer-device-item">
-	<style>
-		paper-material {
-			border-radius: 2px;
-			margin: 16px;
-			background: white;
-			padding: 20px;
-			width: 247px;
-		}
-		.additional {
-			@apply(--layout-horizontal);
-		}
-		.names {
-			@apply(--layout-vertical);
-			font-size: 90%;
-			margin: 15px;
-		}
-		.values {
-			@apply(--layout-vertical);
-			font-size: 90%;
-			margin: 15px;
-		}
-	</style>
 	<template>
+		<style>
+			paper-material {
+				border-radius: 2px;
+				margin: 16px;
+				background: white;
+				padding: 20px;
+				width: 247px;
+			}
+			.additional {
+				@apply(--layout-horizontal);
+			}
+			.names {
+				@apply(--layout-vertical);
+				font-size: 90%;
+				margin: 15px;
+			}
+			.values {
+				@apply(--layout-vertical);
+				font-size: 90%;
+				margin: 15px;
+			}
+		</style>
+
 		<paper-material>
 			<div class="device-item-header">
 				<h4>{{device.Name}}</h4>

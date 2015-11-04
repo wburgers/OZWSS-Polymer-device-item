@@ -14,7 +14,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~1.1.0",
+    "polymer": "Polymer/polymer#^1.1.0",
 	"paper-material": "PolymerElements/paper-material#^1.0.0",
 	"paper-slider": "PolymerElements/paper-slider#^1.0.0",
 	"paper-toggle-button" : "PolymerElements/paper-toggle-button#^1.0.0"

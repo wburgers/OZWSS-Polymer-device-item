@@ -39,38 +39,43 @@
 			<div class="device-item-header">
 				<h4>{{device.Name}}</h4>
 			</div>
-			<template is="dom-if" if="{{_computeMultilevel(device)}}">
+			<template is="dom-if" if="{{_computeMultilevelDevice(device)}}">
 				<paper-slider
 					min="0"
 					max="99"
-					value="{{device.Values.Level}}"
+					value="{{_computeLevelState(device)}}"
 					editable
 					on-change="_sliderChanged">
 				</paper-slider>
 			</template>
-			<template is="dom-if" if="{{_computeBinary(device)}}" id="toggleTemplate">
-				<paper-toggle-button
-					id="toggle"
-					checked={{_computeSwitchState(device)}}
-					on-change="_toggleChanged">
-				</paper-toggle-button>
+			<template is="dom-if" if="{{_computeOnOffDevice(device) || _computeBinaryDevice(device)}}">
+				<template is="dom-repeat" items="{{device.Values}}" as="valueId" filter="_isSwitchValueId">
+					<div style="display: inline-block">
+						{{valueId.Label}} {{valueId.Instance}}:{{valueId.Index}}
+						<paper-toggle-button
+							id="{{device.ID}}~{{valueId.Label}}@{{valueId.Instance}}:{{valueId.Index}}"
+							checked={{_computeSwitchState(valueId)}}
+							on-change="_toggleChanged">
+						</paper-toggle-button>
+					</div>
+				</template>
 			</template>
 			<div class="additional">
 				<div class="names">
-					<template is="dom-if" if="{{_computeBatteryDevice(device)}}">
+					<template is="dom-if" if="{{_computeBatteryLevel(device)}}">
 						<span>Battery Level</span>
 						<span>Last Seen</span>
 					</template>
-					<template is="dom-if" if="{{_computeWakeIntervalDevice(device)}}">
+					<template is="dom-if" if="{{_computeWakeInterval(device)}}">
 						<span>Wake-up Interval</span>
 					</template>
 				</div>
 				<div class="values">
-					<template is="dom-if" if="{{_computeBatteryDevice(device)}}">
+					<template is="dom-if" if="{{_computeBatteryLevel(device)}}">
 						<span>{{_computeBatteryLevel(device)}}</span>
 						<span>{{device.LastSeen}}</span>
 					</template>
-					<template is="dom-if" if="{{_computeWakeIntervalDevice(device)}}">
+					<template is="dom-if" if="{{_computeWakeInterval(device)}}">
 						<span>{{_computeWakeInterval(device)}}</span>
 					</template>
 				</div>
@@ -88,37 +93,71 @@
 				value: function() { return {}; },
 			},
 		},
-		
-		_computeMultilevel: function(device) {
+		_computeMultilevelDevice: function(device) {
 			return device.Type === 'Multilevel Power Switch';
 		},
-		_computeBinary: function(device) {
+		_computeBinaryDevice: function(device) {
 			return device.Type === 'Binary Power Switch';
 		},
-		_computeBatteryDevice: function(device) {
-			return device.Values && device.Values['Battery Level'];
+		_computeOnOffDevice: function(device) {
+			return device.Type === 'On/Off Power Switch';
 		},
-		_computeWakeIntervalDevice: function(device) {
-			return device.Values && device.Values['Wake-up Interval'];
-		},
-		
 		_computeBatteryLevel: function(device) {
-			return device.Values["Battery Level"];
+			if(!device.Values)
+			{
+				return;
+			}
+			for(var valueId of device.Values)
+			{
+				if(valueId.Label === "Battery Level")
+				{
+					return valueId.Value;
+				}
+			}
+			return;
 		},
 		_computeWakeInterval: function(device) {
-			return device.Values["Wake-up Interval"];
+			if(!device.Values)
+			{
+				return;
+			}
+			for(var valueId of device.Values)
+			{
+				if(valueId.Label === "Wake-up Interval")
+				{
+					return valueId.Value;
+				}
+			}
+			return;
 		},
-		_computeSwitchState: function(device) {
-			return device.Values && device.Values.Switch == "True"
+		_computeSwitchState: function(valueId) {
+			return valueId.Value == "True";
 		},
-		
+		_computeLevelState: function(device)
+		{
+			if(device.Values)
+			{
+				for(var valueId of device.Values)
+				{
+					if(valueId.Label !== "Level")
+					{
+						continue;
+					}
+					return valueId.Value;
+				}
+			}
+			return 0;
+		},
+		_isSwitchValueId: function(valueId) {
+			return valueId.Label === "Switch";
+		},
 		_sliderChanged: function(event, detail) {
 			var commandstring = "SETNODE~"+this.device.ID+"~Level="+event.srcElement.value;
 			this.fire('send-command',{command:commandstring});
 		},
 		_toggleChanged: function(event, detail) {
 			var checked = event.srcElement.checked === true ? 1 : 0;
-			var commandstring = "SETNODE~"+this.device.ID+"~Switch="+checked;
+			var commandstring = "SETNODE~"+event.srcElement.id+"="+checked;
 			this.fire('send-command',{command:commandstring});
 		},
 	});
